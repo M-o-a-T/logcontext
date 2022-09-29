@@ -1,9 +1,10 @@
 import anyio
 import logging
-from logcontext import main_context, context_of, log_tree
+from logcontext import main_context, context_of, log_tree, log_backtrace
 
 async def delay(x):
     with context_of("delay %.2f", x):
+        log_backtrace()
         await anyio.sleep(x)
 
 async def test():
