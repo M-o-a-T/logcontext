@@ -24,7 +24,7 @@ name = "Matthias Urlichs"
 email = "matthias@urlichs.de"
 
 [project.license]
-file = "LICENSE.txt"
+file = "LICENSE.md"
 
 [project.urls]
 homepage = "https://m-o-a-t.org"

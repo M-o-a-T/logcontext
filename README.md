@@ -43,7 +43,3 @@ Reporting on the current state of your code is then as easy as::
 Both `context_of` and `log_tree` accept a log level. This way you can
 selectively attach higher log levels to possibly-interesting code.
 "Uninteresting" subtrees are skipped.
-
-"""
-
-from ._main import main_context, context_of, log_backtrace, log_tree
