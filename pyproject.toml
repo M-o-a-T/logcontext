@@ -1,0 +1,81 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = [ "setuptools", "wheel", "setuptools-scm",]
+
+[project]
+classifiers = [
+	"Intended Audience :: Developers",
+	"Programming Language :: Python :: 3",
+	"Framework :: AsyncIO",
+	"Framework :: Trio",
+	"Framework :: AnyIO",
+	"License :: OSI Approved",
+	"Development Status :: 4 - Beta",
+	]
+dependencies = []
+dynamic = [ "version",]
+keywords = [ "async", "logging", "context" ]
+requires-python = ">=3.7"
+name = "logcontext"
+description = "A simple logging system for (async) contexts"
+readme = "README.md"
+[[project.authors]]
+name = "Matthias Urlichs"
+email = "matthias@urlichs.de"
+
+[project.license]
+file = "LICENSE.txt"
+
+[project.urls]
+homepage = "https://m-o-a-t.org"
+repository = "https://github.com/M-o-a-T/logcontext"
+
+[tool.flake8]
+max-line-length = 99
+ignore = [ "F841", "E731", "E502", "E402", "E127", "E123", "W503", "E231", "E203", "F401"]
+
+[tool.isort]
+line_length = 99
+multi_line_output = 3
+profile = "black"
+
+[tool.setuptools]
+packages = [ "logcontext",]
+
+[tool.pylint.messages_control]
+disable="wrong-import-order,ungrouped-imports,too-many-nested-blocks,unspecified-encoding,missing-module-docstring,no-else-continue,too-many-instance-attributes,too-many-statements,too-many-return-statements,superfluous-parens,too-few-public-methods,use-dict-literal,too-many-locals,no-else-return,too-many-arguments,too-many-branches,invalid-name,fixme"
+
+[tool.setuptools_scm]
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+isolated_build = True
+envlist = py310,py39,check
+
+[testenv]
+setenv = 
+    PYTHONPATH = {env:PYTHONPATH}{:}{toxinidir}
+deps = 
+    trio
+    pytest
+commands = 
+    python3 -mpytest tests/
+
+[testenv:check]
+commands = 
+    pylint logcontext tests
+    flake8p logcontext tests
+    black --check logcontext tests
+deps = 
+    pytest
+    pylint
+    black
+    flake8-pyproject
+    flake8
+
+"""
+
+
+[tool.black]
+line-length = 99
