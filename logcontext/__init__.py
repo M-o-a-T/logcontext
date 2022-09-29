@@ -47,4 +47,4 @@ selectively attach higher log levels to possibly-interesting code.
 
 """
 
-from ._main import main_context, context_of, log_backtrace, log_tree
+from ._impl import main_context, context_of, log_backtrace, log_tree
