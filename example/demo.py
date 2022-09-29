@@ -1,6 +1,6 @@
 import anyio
 import logging
-from contextlog import main_context, context_of, log_tree
+from logcontext import main_context, context_of, log_tree
 
 async def delay(x):
     with context_of("delay %.2f", x):

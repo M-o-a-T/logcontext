@@ -8,7 +8,7 @@ context = ContextVar("context")
 
 _main_context = threading.local()
 
-logger = logging.getLogger("contextlog")
+logger = logging.getLogger("logcontext")
 
 class _Context:
     def __init__(self, parent, msg, *args, level=logging.DEBUG, trace_level=None):

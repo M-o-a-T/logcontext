@@ -8,11 +8,11 @@ or an unprotected async call within a `finally:` block.
 You now have no idea what's happening, and low-level instrumentation
 of your code causes the error to get lost in the noise.
 
-Here's how `contextlog` can help.
+Here's how `logcontext` can help.
 
 First, wrap your main code::
 
-	from contextlog import main_context
+	from logcontext import main_context
 	def main():
 		with main_context():
 			... # whatever your program does
@@ -20,7 +20,7 @@ First, wrap your main code::
 Then you wrap each possibly-interesting block, nursery, async context, …
 with
 
-	from contextlog import context_of
+	from logcontext import context_of
 	...
 	async def code_of_interest(arg):
 		with context_of("interesting: %s", arg) as ctx:
@@ -34,7 +34,7 @@ Text and positional arguments will be passed to `logging.log`.
 
 Reporting on the current state of your code is then as easy as::
 
-	from contextlog import log_backtrace, log_tree
+	from logcontext import log_backtrace, log_tree
 
 	...
 	log_tree()  # reports the whole program's context tree
