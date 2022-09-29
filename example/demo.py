@@ -8,7 +8,7 @@ async def delay(x):
 
 async def test():
     async with anyio.create_task_group() as tg:
-        with context_of("test"):
+        with context_of("test", trace_level=logging.DEBUG):
             tg.start_soon(delay,0.1)
             tg.start_soon(delay,0.2)
             tg.start_soon(delay,0.25)

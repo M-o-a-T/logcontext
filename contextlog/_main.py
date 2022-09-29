@@ -11,12 +11,13 @@ _main_context = threading.local()
 logger = logging.getLogger("contextlog")
 
 class _Context:
-    def __init__(self, parent, msg, *args, level=logging.DEBUG):
+    def __init__(self, parent, msg, *args, level=logging.DEBUG, trace_level=None):
         self.parent = parent
         self.children = set()
         self.msg = msg
         self.args = args
         self.level = level
+        self.trace = trace_level
         self._ctx = None
 
     def __enter__(self):
@@ -25,21 +26,25 @@ class _Context:
         if self.parent is not None:
             self.parent.children.add(self)
         self._ctx = context.set(self)
+        if self.trace is not None:
+            self._log(level=self.trace, add=">> ")
 
         return self
 
-    def __exit__(self, *tb):
+    def __exit__(self, et,ev,etb):
         context.reset(self._ctx)
+        if self.trace is not None:
+            self._log(level=self.trace, add="<< " if ev is None else "<E ")
         if self.parent is not None:
             self.parent.children.remove(self)
         self._ctx = None
 
-    def _log(self, indent=0, level=logging.DEBUG):
+    def _log(self, indent=0, add="", level=logging.DEBUG):
         if callable(self.msg):
             msg,args = msg(*self.args)
         else:
             msg,args = self.msg,self.args
-        logger.log(level, " "*indent + msg, *args)
+        logger.log(level, add + " "*indent + msg, *args)
 
     def log_tree(self, indent=0, level=logging.DEBUG):
         if self.want_log():
@@ -64,13 +69,13 @@ class _Context:
             ctx = ctx.parent
 
 @contextmanager
-def context_of(name, *args, level=logging.DEBUG):
-    with _Context(context.get(), name, *args, level=level) as ctx:
+def context_of(name, *args, **kw):
+    with _Context(context.get(), name, *args, **kw) as ctx:
         yield ctx
 
 @contextmanager
-def main_context(name="MAIN", *args):
-    with _Context(None, name, *args) as ctx:
+def main_context(name="MAIN", *args, **kw):
+    with _Context(None, name, *args, **kw) as ctx:
         if hasattr(_main_context, "main"):
             raise RuntimeError("Parallel 'main_context' calls detected.")
 
