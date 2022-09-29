@@ -60,13 +60,17 @@ class _Context:
                 return True
         return False
 
-    def log_backtrace(self, level=logging.DEBUG):
+    def log_backtrace(self, level=logging.DEBUG, depth=-1):
         ctx = self
         indent=0
         while ctx is not None:
             ctx._log(level=level, indent=indent)
             indent += 1
             ctx = ctx.parent
+            if not depth:
+                break
+            depth -= 1
+
 
 @contextmanager
 def context_of(name, *args, **kw):
@@ -86,11 +90,11 @@ def main_context(name="MAIN", *args, **kw):
             del _main_context.main
 
 
-def log_backtrace(level=logging.DEBUG):
+def log_backtrace(**kw):
     """
     Log a back-trace of the current context
     """
-    context.get().log_backtrace(level=level)
+    context.get().log_backtrace(**kw)
 
 
 def log_tree(level=logging.DEBUG):
